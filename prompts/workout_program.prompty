@@ -1,0 +1,177 @@
+---
+name: Workout Program Generator
+description: A prompt to generate a personalized weekly workout plan based on user's goals, physical data, and training constraints.
+model:
+  api: chat
+  configuration:
+    type: azure_openai
+    azure_endpoint: ${env:EVAL_GPT4_1_ENDPOINT}
+    azure_deployment: ${env:EVAL_GPT4_1_DEPLOYMENT_NAME}
+    api_version: ${env:EVAL_GPT4_1_API_VERSION}
+  parameters:
+    temperature: 0.5
+    max_tokens: 10000
+    response_format:
+      type: json_object
+inputs:
+  training_days:
+    type: string
+  fitness_goals:
+    type: string
+  special_conditions:
+    type: string
+  height:
+    type: string
+  weight:
+    type: string
+  age:
+    type: string
+  gender:
+    type: string
+  user_background:
+    type: string
+  time_per_session:
+    type: string
+  workout_location:
+    type: string
+  available_equipment:
+    type: string
+  experience_level:
+    type: string
+---
+system:
+You are a world-class personal trainer and exercise physiologist with expertise in creating personalized workout programs. Your task is to design a comprehensive, safe, and effective weekly workout plan based on the user's specific goals, physical characteristics, lifestyle, and available resources.
+
+user:
+**INPUTS:**
+
+The user will provide the following information:
+- **Training Frequency:** {{training_days}} days per week (e.g., 3, 4, 5, 6 days)
+- **Fitness Goals:** {{fitness_goals}} (e.g., Weight Loss, Muscle Building, Strength, Endurance, General Fitness, Athletic Performance)
+- **Special Conditions/Needs:** {{special_conditions}} (e.g., Lower back pain, Knee injury, Pregnancy, Diabetes, Heart condition, None)
+- **Personal Data:**
+    - Height: {{height}}
+    - Weight: {{weight}}
+    - Age: {{age}}
+    - Gender: {{gender}}
+- **User Background:** {{user_background}} (e.g., "I am a developer working from my desk all day", "I'm a busy parent with limited time", "Former athlete getting back into fitness")
+- **Time Constraints:** {{time_per_session}} per workout session (e.g., 30 minutes, 45 minutes, 60 minutes, 90 minutes)
+- **Workout Location:** {{workout_location}} (e.g., Gym, Home, Outdoors, Mixed)
+- **Available Equipment:** {{available_equipment}} (e.g., Full gym access, Dumbbells and resistance bands, Bodyweight only, Basic home gym setup)
+- **Experience Level:** {{experience_level}} (e.g., Beginner, Intermediate, Advanced)
+
+**TASK:**
+
+Based on the provided inputs, generate a comprehensive weekly workout plan that is:
+1. **Goal-Oriented:** Specifically designed to achieve the user's fitness objectives
+2. **Safe and Appropriate:** Consider special conditions, experience level, and physical limitations
+3. **Practical:** Work within time constraints, location, and equipment limitations
+4. **Progressive:** Include progression strategies and modifications
+5. **Balanced:** Incorporate proper warm-up, cool-down, and recovery considerations
+6. **Sustainable:** Realistic for the user's lifestyle and background
+
+**OUTPUT FORMAT:**
+
+The output MUST be a single, valid JSON object. Do not include any text or explanations before or after the JSON block. The JSON should be structured as follows:
+
+{
+  "weeklyWorkoutPlan": {
+    "summary": {
+      "programOverview": "<Brief description of the program approach and focus>",
+      "weeklyVolume": "<Total estimated weekly training time>",
+      "safetyNotes": "<Important safety considerations based on user's conditions>"
+    },
+    "schedule": {
+      "Monday": {
+        "workoutType": "Upper Body Strength",
+        "duration": "45 minutes",
+        "exercises": [
+          {
+            "name": "Push-ups",
+            "sets": 3,
+            "reps": "8-12",
+            "rest": "60s"
+          },
+          {
+            "name": "Pike Push-ups",
+            "sets": 3,
+            "reps": "6-10",
+            "rest": "60s"
+          },
+          {
+            "name": "Tricep Dips",
+            "sets": 3,
+            "reps": "8-12",
+            "rest": "60s"
+          }
+        ]
+      },
+      "Tuesday": {
+        "restDay": true,
+        "activity": "Light walking or stretching for 20-30 minutes"
+      },
+      "Wednesday": {
+        "workoutType": "Lower Body Strength",
+        "duration": "45 minutes",
+        "exercises": [
+          {
+            "name": "Bodyweight Squats",
+            "sets": 3,
+            "reps": "12-15",
+            "rest": "60s"
+          },
+          {
+            "name": "Lunges",
+            "sets": 3,
+            "reps": "10 each leg",
+            "rest": "60s"
+          },
+          {
+            "name": "Glute Bridges",
+            "sets": 3,
+            "reps": "12",
+            "rest": "45s"
+          }
+        ]
+      },
+      "Thursday": {
+        "restDay": true,
+        "activity": "Yoga or meditation for 20-30 minutes"
+      },
+      "Friday": {
+        "workoutType": "Full Body Circuit",
+        "duration": "45 minutes",
+        "exercises": [
+          {
+            "name": "Burpees",
+            "sets": 3,
+            "reps": "5-8",
+            "rest": "90s"
+          },
+          {
+            "name": "Mountain Climbers",
+            "sets": 3,
+            "reps": "20 total",
+            "rest": "60s"
+          },
+          {
+            "name": "Jump Squats",
+            "sets": 3,
+            "reps": "10-12",
+            "rest": "60s"
+          }
+        ]
+      },
+      "Saturday": {
+        "restDay": true,
+        "activity": "Outdoor activity or sports"
+      },
+      "Sunday": {
+        "restDay": true,
+        "activity": "Complete rest or light stretching"
+      }
+    }
+  }
+}
+
+## OUTPUT
