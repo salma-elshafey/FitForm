@@ -12,13 +12,13 @@ class UserProfile:
     User Profile class to store user data and format inputs for prompts
     """
     
-    def __init__(self):
+    def __init__(self, date_of_birth: date):
         # Personal Information
         self.first_name: str = ""
         self.last_name: str = ""
         self.email: str = ""
-        self.date_of_birth: Optional[date] = None
-        self.gender: str = ""  # "Male", "Female", "Other"
+        self.date_of_birth: date = date_of_birth  # Required, not optional
+        self.gender: str = ""  # "Male", "Female"
         
         # Physical Data
         self.height: Optional[float] = None  # in cm
@@ -48,11 +48,8 @@ class UserProfile:
         # Background
         self.user_background: str = ""
     
-    def get_age(self) -> Optional[int]:
+    def get_age(self) -> int:
         """Calculate age from date of birth"""
-        if not self.date_of_birth:
-            return None
-        
         today = date.today()
         age = today.year - self.date_of_birth.year
         if (today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day):
@@ -78,6 +75,9 @@ class UserProfile:
         if not self.last_name:
             errors.setdefault('personal', []).append("Last name is required")
         
+        if not self.date_of_birth:
+            errors.setdefault('personal', []).append("Date of birth is required")
+        
         if self.email and '@' not in self.email:
             errors.setdefault('personal', []).append("Invalid email format")
         
@@ -90,7 +90,7 @@ class UserProfile:
         
         # Age validation
         age = self.get_age()
-        if age and (age < 13 or age > 120):
+        if age < 13 or age > 120:
             errors.setdefault('personal', []).append("Age must be between 13-120 years")
         
         # Training validation
@@ -116,7 +116,7 @@ class UserProfile:
             "special_conditions": ", ".join(self.special_conditions) if self.special_conditions else "None",
             "height": str(self.height or ""),
             "weight": str(self.weight or ""),
-            "age": str(self.get_age() or ""),
+            "age": str(self.get_age()),
             "gender": self.gender or "",
             "user_background": self.user_background or "",
             "time_per_session": f"{self.time_per_session or 45} minutes",
@@ -134,7 +134,7 @@ class UserProfile:
             "sub_goals": ", ".join(self.sub_goals) if self.sub_goals else "",
             "height": str(self.height or ""),
             "weight": str(self.weight or ""),
-            "age": str(self.get_age() or ""),
+            "age": str(self.get_age()),
             "gender": self.gender or "",
             "activity_level": self.activity_level or "Moderately Active",
             "allergies": ", ".join(self.allergies) if self.allergies else "None",
