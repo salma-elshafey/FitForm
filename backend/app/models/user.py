@@ -186,3 +186,4 @@ class UserProfile:
             "cooking_time": self.cooking_time,
             "user_background": self.user_background
         }
+# TODO: Add WorkoutHistory and MealPlanChecklist models below
